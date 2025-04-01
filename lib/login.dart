@@ -1,4 +1,3 @@
-// login.dart (modified version of your code)
 import 'package:edu_orbit/bottomNavScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -20,22 +19,18 @@ class _LoginPageState extends State<LoginPage>
   void initState() {
     super.initState();
 
-    // Animation controller with longer duration
     _animationController = AnimationController(
       vsync: this,
-      duration:
-          Duration(milliseconds: 1200), // Longer duration for other animations
+      duration: Duration(milliseconds: 1200),
     );
 
-    // Significantly delay background fade-in to allow logo to finish moving
     _backgroundOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0.1, 0.4, curve: Curves.easeIn), // Start sooner
+        curve: Interval(0.1, 0.4, curve: Curves.easeIn),
       ),
     );
 
-    // Delay other animations accordingly
     _transcriptOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -50,10 +45,7 @@ class _LoginPageState extends State<LoginPage>
       ),
     );
 
-    // Start animation after a longer delay to ensure hero animation is well underway
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Delay the start of background/content animations
-      // This gives the logo time to move up before other content appears
       Future.delayed(Duration(milliseconds: 100), () {
         _animationController.forward();
       });
@@ -68,6 +60,9 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -76,10 +71,13 @@ class _LoginPageState extends State<LoginPage>
             animation: _animationController,
             builder: (context, child) {
               return Container(
-                height: MediaQuery.of(context).size.height,
+                height: screenHeight,
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.01, // Adjust padding dynamically
+                ),
                 child: Stack(
                   children: [
-                    // Background image (Group_4.png)
+                    // Background Image (Responsive)
                     Positioned(
                       top: 0,
                       left: 0,
@@ -98,10 +96,9 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     ),
 
-                    // Logo (carried over from splash screen)
+                    // Logo (Responsive)
                     Positioned(
-                      top:
-                          130, // Using your updated position from the pasted code
+                      top: screenHeight * 0.2, // Adjusted for different heights
                       left: 0,
                       right: 0,
                       child: Center(
@@ -109,22 +106,22 @@ class _LoginPageState extends State<LoginPage>
                           tag: 'logo',
                           child: Image.asset(
                             'assets/images/logo.png',
-                            width: 263,
-                            height: 79,
+                            width: screenWidth * 0.6, // Scale width dynamically
+                            height: screenHeight * 0.08,
                           ),
                         ),
                       ),
                     ),
 
-                    // Transcript image
+                    // Transcript Image (Responsive)
                     Positioned(
-                      top: 280,
+                      top: screenHeight * 0.35, // Position dynamically
                       left: 0,
                       right: 0,
                       child: Opacity(
                         opacity: _transcriptOpacity.value,
                         child: Container(
-                          height: 240,
+                          height: screenHeight * 0.3, // Scale image size
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image:
@@ -137,11 +134,11 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     ),
 
-                    // Login form
+                    // Login Form (Responsive)
                     Positioned(
-                      top: 470,
-                      left: 20,
-                      right: 20,
+                      top: screenHeight * 0.6,
+                      left: screenWidth * 0.05,
+                      right: screenWidth * 0.05,
                       child: Opacity(
                         opacity: _formOpacity.value,
                         child: Column(
@@ -150,7 +147,7 @@ class _LoginPageState extends State<LoginPage>
                             Text(
                               "Welcome Back",
                               style: TextStyle(
-                                fontSize: 33,
+                                fontSize: screenWidth * 0.08,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 27, 27, 27),
                                 fontFamily: 'Poppins',
@@ -160,86 +157,60 @@ class _LoginPageState extends State<LoginPage>
                             Text(
                               "Good to see you",
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: screenWidth * 0.05,
                                 fontWeight: FontWeight.normal,
                                 color: Color.fromARGB(255, 27, 27, 27),
                                 fontFamily: 'Poppins',
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            SizedBox(height: 15),
+                            SizedBox(height: screenHeight * 0.02),
                             TextField(
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: screenHeight * 0.015),
                             TextField(
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        // Add forgot password functionality
-                                      },
-                                      child: Text(
-                                        "Forgot Password?",
-                                        style:
-                                            TextStyle(color: Colors.grey[700]),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        // Add signup functionality
-                                      },
-                                      child: Text(
-                                        "Sign Up",
-                                        style: TextStyle(
-                                            color: Color.fromARGB(255, 141, 47,
-                                                10)), // Matching button color
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromARGB(255, 223,
-                                          101, 1), // Added orange background
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BottomNavScreen()));
-                                    },
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
+                            SizedBox(height: screenHeight * 0.015),
+                            SizedBox(
+                              width: double.infinity,
+                              height:
+                                  screenHeight * 0.07, // Adjust button height
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 223, 101, 1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                              ],
-                            )
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Login",
+                                  style:
+                                      TextStyle(fontSize: screenWidth * 0.045),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
