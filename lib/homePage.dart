@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors, unused_local_variable
 
+import 'package:edu_orbit/components/QuickLinks.dart';
+import 'package:edu_orbit/components/UpcomingEventsCard.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -9,7 +11,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   // Animation controller
   late AnimationController _animationController;
   late Animation<Offset> _profileSlideAnimation;
@@ -22,13 +25,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize animation controller with slower duration for smoother effect
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1500),
     );
-    
+
     // Profile card slides from left (-1.0) to original position (0.0)
     _profileSlideAnimation = Tween<Offset>(
       begin: Offset(-1.5, 0.0),
@@ -37,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.0, 0.7, curve: Curves.easeOutQuint),
     ));
-    
+
     // First activity card slides from right (1.0) to original position (0.0)
     _activityCardSlideAnimation = Tween<Offset>(
       begin: Offset(1.5, 0.0),
@@ -46,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.1, 0.8, curve: Curves.easeOutQuint),
     ));
-    
+
     // Second activity card slides from right (1.0) to original position (0.0)
     // with slight delay after the first card
     _recentActivityCardSlideAnimation = Tween<Offset>(
@@ -56,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.3, 0.9, curve: Curves.easeOutQuint),
     ));
-    
+
     // Add fade animations for more smoothness
     _profileFadeAnimation = Tween<double>(
       begin: 0.0,
@@ -65,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.0, 0.6, curve: Curves.easeIn),
     ));
-    
+
     _activityFadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -73,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.1, 0.7, curve: Curves.easeIn),
     ));
-    
+
     _recentActivityFadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -81,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Interval(0.3, 0.8, curve: Curves.easeIn),
     ));
-    
+
     // Add a small delay before starting animation for a better user experience
     Future.delayed(Duration(milliseconds: 100), () {
       _animationController.forward();
@@ -101,12 +104,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildLogoSection(),
-            _buildMainContent(screenWidth, screenHeight),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildLogoSection(),
+              Container(
+                height: screenHeight - 100, // Adjust this value as needed
+                child: _buildMainContent(screenWidth, screenHeight),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -137,43 +145,47 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
-    return Expanded(
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/Group_69.png'),
-            opacity: 0.7,
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/Group_69.png'),
+          opacity: 0.7,
+          fit: BoxFit.cover,
         ),
-        child: Column(
-          children: [
-            SizedBox(height: screenHeight * 0.028),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  // Animated profile card from left with fade
-                  FadeTransition(
-                    opacity: _profileFadeAnimation,
-                    child: SlideTransition(
-                      position: _profileSlideAnimation,
-                      child: _buildProfileCard(screenHeight),
-                    ),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: screenHeight * 0.028),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Animated profile card from left with fade
+                FadeTransition(
+                  opacity: _profileFadeAnimation,
+                  child: SlideTransition(
+                    position: _profileSlideAnimation,
+                    child: _buildProfileCard(screenHeight),
                   ),
-                  SizedBox(width: screenWidth * 0.05),
-                  _buildAnimatedRightColumnWidgets(screenWidth, screenHeight),
-                ],
-              ),
-            )
-          ],
-        ),
+                ),
+                SizedBox(width: screenWidth * 0.05),
+                _buildAnimatedRightColumnWidgets(screenWidth, screenHeight),
+              ],
+            ),
+          ),
+          // Add the UpcomingEventsCard below the existing content
+          SizedBox(height: screenHeight * 0.03),
+          UpcomingEventsCard(),
+          QuickLinks(),
+        ],
       ),
     );
   }
 
-  Widget _buildAnimatedRightColumnWidgets(double screenWidth, double screenHeight) {
+  Widget _buildAnimatedRightColumnWidgets(
+      double screenWidth, double screenHeight) {
     return Column(
       children: [
         // Animated first activity card from right with fade
@@ -266,7 +278,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildProfileText(String text, double screenHeight, {double letterSpacing = 0}) {
+  Widget _buildProfileText(String text, double screenHeight,
+      {double letterSpacing = 0}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -342,7 +355,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildRecentActivitiesContainer(double screenWidth, double screenHeight) {
+  Widget _buildRecentActivitiesContainer(
+      double screenWidth, double screenHeight) {
     return Container(
       height: 150,
       width: screenWidth * 0.4,
