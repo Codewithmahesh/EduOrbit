@@ -8,8 +8,25 @@ class ComplaintScreen extends StatefulWidget {
 }
 
 class _ComplaintScreenState extends State<ComplaintScreen> {
-  int _selectedTab = 0;
+  int _selectedTab = 1; // Default to "My Complaints"
   final _descriptionController = TextEditingController();
+  final List<Map<String, String>> _complaints = [
+    {
+      'id': '1',
+      'description': 'Issue in Washroom with flush',
+      'time': '12hrs',
+    },
+    {
+      'id': '2',
+      'description': 'Seniors are taking ragging near football field',
+      'time': '11hrs',
+    },
+    {
+      'id': '3',
+      'description': 'Teacher is using Curse words to students ENTC B',
+      'time': '9hrs',
+    },
+  ];
 
   @override
   void dispose() {
@@ -112,10 +129,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 child: TextField(
                   controller: _descriptionController,
                   maxLines: 8,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(10),
-                  ),
+                  // decoration: const InputBorder.none,
+                  // contentPadding: const EdgeInsets.all(10),
                 ),
               ),
               const SizedBox(height: 20),
@@ -123,6 +138,19 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     // Add submission logic here
+                    if (_descriptionController.text.isNotEmpty) {
+                      setState(() {
+                        _complaints.insert(
+                          0,
+                          {
+                            'id': (_complaints.length + 1).toString(),
+                            'description': _descriptionController.text,
+                            'time': '0hrs',
+                          },
+                        );
+                        _descriptionController.clear();
+                      });
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
@@ -139,10 +167,49 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 ),
               ),
             ] else if (_selectedTab == 1) ...[
-              const Center(
-                child: Text(
-                  'My Complaints (To be implemented)',
-                  style: TextStyle(fontSize: 18),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _complaints.length,
+                  itemBuilder: (context, index) {
+                    final complaint = _complaints[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      color: Colors.orange[50],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(color: Colors.orange.shade200),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Complaint #${complaint['id']}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(complaint['description']!),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              complaint['time']!,
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
