@@ -156,7 +156,6 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       child: Column(
         children: [
-          SizedBox(height: screenHeight * 0.028),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
@@ -379,34 +378,15 @@ class _MyHomePageState extends State<MyHomePage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Recent",
+              "Leaderboard",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            Text(
-              "Activities",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            Icon(Icons.star, color: Colors.white, size: 30),
             Spacer(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                height: 40,
-                width: 40,
-                child: Icon(
-                  Icons.access_time,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
           ],
         ),
       ),

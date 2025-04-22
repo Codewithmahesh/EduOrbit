@@ -10,28 +10,6 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   int _selectedIndex = 0;
 
-  final List<IconData> _sidebarIcons = [
-    Icons.home,
-    Icons.check_circle_outline,
-    Icons.phone_iphone,
-    Icons.favorite,
-    Icons.cancel,
-    Icons.attach_money,
-    Icons.calendar_today,
-    Icons.description,
-  ];
-
-  final List<String> _sidebarLabels = [
-    'Home',
-    'Verify',
-    'Mobile',
-    'Heart',
-    'Cancel',
-    'Money',
-    'Calendar',
-    'Docs',
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -41,88 +19,154 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background Image with Overlay
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images2/bg.png'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  // ignore: deprecated_member_use
-                  Color.fromRGBO(255, 165, 0, 0.8),
-                  BlendMode.softLight,
-                ),
-              ),
-            ),
-            child: Center(
+          // Main content area
+          Padding(
+            padding: const EdgeInsets.only(left: 60),
+            child: Container(
+              color: Colors.deepOrange,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/college_logo.png',
-                    height: 100,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'MGM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Powered by EduOrbit',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
+                  // College content
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Illustration of students and building
+                          SizedBox(
+                            height: 250,
+                            child: Image.asset(
+                              'assets/images2/Students talking in front of university.png',
+                              errorBuilder: (context, error, stackTrace) {
+                                return Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // College name
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'MGM College of Engineering',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Powered by EduOrbit',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          // Sidebar
+
+          // Sidebar with circular icons
           SafeArea(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: 60,
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  itemCount: _sidebarIcons.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () => _onItemTapped(index),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: _selectedIndex == index
-                              ? Colors.blue.withOpacity(0.8)
-                              : Colors.transparent,
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Icon(
-                          _sidebarIcons[index],
-                          color: Colors.black,
-                          size: 30,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+            child: Container(
+              width: 60,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      children: [
+                        _buildSidebarIcon(0, 'College', Icons.account_balance),
+                        _buildSidebarIcon(1, 'Voting', Icons.phone_android),
+                        _buildSidebarIcon(3, 'Complains', Icons.chat_bubble),
+                        _buildSidebarIcon(4, 'Accounting', Icons.payment),
+                        _buildSidebarIcon(5, 'Facility Booking', Icons.calendar_today),
+                        _buildSidebarIcon(6, 'Notes', Icons.description),
+                      ],
+                    ),
+                  ),
+                 
+                ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSidebarIcon(int index, String label, IconData icon) {
+    bool isSelected = _selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            Tooltip(
+              message: label,
+              verticalOffset: 0,
+              preferBelow: false,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.orange : Colors.blue.shade700,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? Colors.orange.shade700
+                        : Colors.blue.shade800,
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                width: 5,
+                height: 5,
+                decoration: const BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-          transitionDuration: Duration(milliseconds: 1500), // Much slower transition (1.5 seconds)
+          transitionDuration: Duration(milliseconds: 1500), 
         ),
       );
     });
