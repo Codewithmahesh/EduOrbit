@@ -1,3 +1,4 @@
+import 'package:edu_orbit/category.dart';
 import 'package:edu_orbit/homePage.dart';
 import 'package:flutter/material.dart';
 
@@ -6,14 +7,15 @@ class BottomNavScreen extends StatefulWidget {
   _BottomNavScreenState createState() => _BottomNavScreenState();
 }
 
-class _BottomNavScreenState extends State<BottomNavScreen> with SingleTickerProviderStateMixin {
+class _BottomNavScreenState extends State<BottomNavScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
   late List<Animation<double>> _animations;
 
   final List<Widget> _pages = [
     MyHomePage(),
-    Center(child: Text('Search Page')),
+    CategoryScreen(),
     Center(child: Text('Notifications Page')),
     Center(child: Text('Profile Page')),
   ];
@@ -112,7 +114,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> with SingleTickerProv
       animation: _animations[index],
       builder: (context, child) {
         double animationValue = isSelected ? _animations[index].value : 1.0;
-        
+
         return GestureDetector(
           onTap: () => _onItemTapped(index),
           child: Container(

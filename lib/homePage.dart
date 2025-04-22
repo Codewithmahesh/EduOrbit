@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage>
             children: [
               _buildLogoSection(),
               Container(
-                height: screenHeight - 100, // Adjust this value as needed
+                height: screenHeight, // Adjust this value as needed
                 child: _buildMainContent(screenWidth, screenHeight),
               ),
             ],
