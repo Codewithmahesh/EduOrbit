@@ -99,15 +99,7 @@ class _QuickLinksState extends State<QuickLinks>
 
               // Book Facility option
               InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ComplaintScreen(), // Replace with your screen
-                    ),
-                  );
-                },
+                onTap: () {},
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 16.0),
@@ -136,7 +128,13 @@ class _QuickLinksState extends State<QuickLinks>
               // Submit Complain option
               InkWell(
                 onTap: () {
-                  // Add navigation logic here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ComplaintScreen(), // Replace with your screen
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
