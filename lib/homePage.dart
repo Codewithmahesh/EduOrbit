@@ -13,7 +13,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  // Animation controller
   late AnimationController _animationController;
   late Animation<Offset> _profileSlideAnimation;
   late Animation<Offset> _activityCardSlideAnimation;
@@ -26,13 +25,11 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
 
-    // Initialize animation controller with slower duration for smoother effect
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1500),
     );
 
-    // Profile card slides from left (-1.0) to original position (0.0)
     _profileSlideAnimation = Tween<Offset>(
       begin: Offset(-1.5, 0.0),
       end: Offset.zero,
@@ -41,7 +38,6 @@ class _MyHomePageState extends State<MyHomePage>
       curve: Interval(0.0, 0.7, curve: Curves.easeOutQuint),
     ));
 
-    // First activity card slides from right (1.0) to original position (0.0)
     _activityCardSlideAnimation = Tween<Offset>(
       begin: Offset(1.5, 0.0),
       end: Offset.zero,
@@ -50,8 +46,6 @@ class _MyHomePageState extends State<MyHomePage>
       curve: Interval(0.1, 0.8, curve: Curves.easeOutQuint),
     ));
 
-    // Second activity card slides from right (1.0) to original position (0.0)
-    // with slight delay after the first card
     _recentActivityCardSlideAnimation = Tween<Offset>(
       begin: Offset(1.5, 0.0),
       end: Offset.zero,
@@ -60,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage>
       curve: Interval(0.3, 0.9, curve: Curves.easeOutQuint),
     ));
 
-    // Add fade animations for more smoothness
     _profileFadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -85,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage>
       curve: Interval(0.3, 0.8, curve: Curves.easeIn),
     ));
 
-    // Add a small delay before starting animation for a better user experience
     Future.delayed(Duration(milliseconds: 100), () {
       _animationController.forward();
     });
@@ -105,14 +97,13 @@ class _MyHomePageState extends State<MyHomePage>
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildLogoSection(),
-              Container(
-                height: screenHeight, // Adjust this value as needed
-                child: _buildMainContent(screenWidth, screenHeight),
-              ),
+              // Removed fixed height container here
+              _buildMainContent(screenWidth, screenHeight),
             ],
           ),
         ),
@@ -147,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage>
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     return Container(
       width: double.infinity,
+      // Removed fixed height here
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/Group_69.png'),
@@ -155,13 +147,13 @@ class _MyHomePageState extends State<MyHomePage>
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min, // This helps fit content properly
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Animated profile card from left with fade
                 FadeTransition(
                   opacity: _profileFadeAnimation,
                   child: SlideTransition(
@@ -170,14 +162,21 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                 ),
                 SizedBox(width: screenWidth * 0.05),
-                _buildAnimatedRightColumnWidgets(screenWidth, screenHeight),
+                Expanded(
+                  // Added Expanded to ensure the right column respects screen boundaries
+                  child: _buildAnimatedRightColumnWidgets(
+                      screenWidth, screenHeight),
+                ),
               ],
             ),
           ),
-          // Add the UpcomingEventsCard below the existing content
           SizedBox(height: screenHeight * 0.03),
           UpcomingEventsCard(),
-          QuickLinks(),
+          // Added padding at the bottom to ensure enough space
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: QuickLinks(),
+          ),
         ],
       ),
     );
@@ -187,7 +186,6 @@ class _MyHomePageState extends State<MyHomePage>
       double screenWidth, double screenHeight) {
     return Column(
       children: [
-        // Animated first activity card from right with fade
         FadeTransition(
           opacity: _activityFadeAnimation,
           child: SlideTransition(
@@ -196,7 +194,6 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         ),
         SizedBox(height: screenHeight * 0.01),
-        // Animated second activity card from right with delay and fade
         FadeTransition(
           opacity: _recentActivityFadeAnimation,
           child: SlideTransition(
@@ -252,6 +249,7 @@ class _MyHomePageState extends State<MyHomePage>
         shape: BoxShape.circle,
         image: DecorationImage(
           image: AssetImage('assets/images/man.png'),
+          fit: BoxFit.cover,
         ),
         boxShadow: [
           BoxShadow(
@@ -302,8 +300,8 @@ class _MyHomePageState extends State<MyHomePage>
       height: 150,
       width: screenWidth * 0.4,
       decoration: BoxDecoration(
-        color: Color(0xFF4A65C0), // Solid blue color from the image
-        borderRadius: BorderRadius.circular(15), // Rounded corners
+        color: Color(0xFF4A65C0),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -317,36 +315,21 @@ class _MyHomePageState extends State<MyHomePage>
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Your",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              "Activity",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            Text("Your",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+            Text("Activity",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
             Spacer(),
             Align(
               alignment: Alignment.bottomRight,
-              child: Container(
-                height: 40,
-                width: 40,
-                child: Icon(
-                  Icons.access_time,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
+              child: Icon(Icons.access_time, size: 30, color: Colors.white),
             ),
           ],
         ),
@@ -360,8 +343,8 @@ class _MyHomePageState extends State<MyHomePage>
       height: 150,
       width: screenWidth * 0.4,
       decoration: BoxDecoration(
-        color: Color(0xFFF9D74C), // Solid yellow color from the image
-        borderRadius: BorderRadius.circular(15), // Rounded corners
+        color: Color(0xFFF9D74C),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -375,18 +358,22 @@ class _MyHomePageState extends State<MyHomePage>
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Leaderboard",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Icon(Icons.star, color: Colors.white, size: 30),
+            Text("Recent",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
+            Text("Activities",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
             Spacer(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Icon(Icons.update, size: 30, color: Colors.black),
+            ),
           ],
         ),
       ),

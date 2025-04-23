@@ -107,12 +107,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         _buildSidebarIcon(1, 'Voting', Icons.phone_android),
                         _buildSidebarIcon(3, 'Complains', Icons.chat_bubble),
                         _buildSidebarIcon(4, 'Accounting', Icons.payment),
-                        _buildSidebarIcon(5, 'Facility Booking', Icons.calendar_today),
+                        _buildSidebarIcon(
+                            5, 'Facility Booking', Icons.calendar_today),
                         _buildSidebarIcon(6, 'Notes', Icons.description),
                       ],
                     ),
                   ),
-                 
                 ],
               ),
             ),
