@@ -1,3 +1,4 @@
+import 'package:edu_orbit/ProfilePage.dart';
 import 'package:edu_orbit/category.dart';
 import 'package:edu_orbit/homePage.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _BottomNavScreenState extends State<BottomNavScreen>
     MyHomePage(),
     CategoryScreen(),
     Center(child: Text('Notifications Page')),
-    Center(child: Text('Profile Page')),
+    ProfileApp(),
   ];
 
   @override
